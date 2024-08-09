@@ -28,6 +28,11 @@ add drx39xxj.patch
 add ccs.patch
 add rc-cec.patch
 
+[6.9.1023]
+add v6.9_i2c_mux.patch
+add v6.9_i2c_mux_tbs.patch
+add v6.9_assign_str.patch
+
 [6.8.1023]
 add v6.8-ccs.patch
 add v6.8-spi.patch
@@ -39,9 +44,6 @@ add v6.7-cec.patch
 add v6.5_pcm_copy.patch
 add v6.5_dvb_math.patch
 
-[6.4.1023]
-add v6.4_pin_user_pages.patch
-
 [6.3.1023]
 add v6.3_class_create.patch
 add v6.3_check_endpoint.patch
@@ -50,6 +52,7 @@ add v6.3_check_endpoint.patch
 add v6.2_class.patch
 add v6.2_remove.patch
 add v6.2_probe.patch
+add v6.2_probe_tbs.patch
 add v6.2_v4l2-core.patch
 
 [6.1.1023]
@@ -58,12 +61,14 @@ add v6.1_i2c_probe.patch
 add v6.1_videobuf2.patch
 add v6.1_timer.patch
 add v6.1_ipu3.patch
+#add v6.1_i2c_probe_tbs.patch
 
 [6.0.1023]
 add v6.0_i2c_remove.patch
 add v6.0_v4l2-tpg.patch
 add v6.0_pt3.patch
 add v6.0_testdrv.patch
+add v6.0_i2c_remove_tbs.patch
 
 [5.18.1023]
 add v5.18_rc.patch
@@ -105,7 +110,6 @@ add v5.7_pin_user_pages.patch
 add v5.7_define_seq_attribute.patch
 
 [5.6.1023]
-add v5.6_pin_user_pages.patch
 add v5.6_const_fb_ops.patch
 add v5.6_pm_runtime_get_if_active.patch
 

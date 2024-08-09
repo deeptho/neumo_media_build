@@ -636,6 +636,8 @@ $config{'COMPILE_TEST'} = 0;
 $intopt { "DVB_MAX_ADAPTERS" } = 64;
 disable_config('DVB_DEMUX_SECTION_LOSS_LOG');
 disable_config('DVB_SAA716X_FF');
+disable_config('CEC_CORE');
+disable_config('MEDIA_CEC_SUPPORT');
 
 # Check dependencies
 my %newconfig = checkdeps();
@@ -653,7 +655,7 @@ while (my ($key, $deps) = each %depend) {
 	print OUT "# Needed by ", join(', ', keys %$deps), "\n";
 	print OUT "config $key\n\ttristate\n";
 	print OUT "\tdefault ", qw(n m y)[$kernopts{$key}], "\n\n";
-	print OUT "\toption modules\n" if ($key eq "MODULES");
+#	print OUT "\toption modules\n" if ($key eq "MODULES");
 }
 close OUT;
 
