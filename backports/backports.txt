@@ -28,6 +28,13 @@ add drx39xxj.patch
 add ccs.patch
 add rc-cec.patch
 
+[6.11.1023]
+add v6.11-unaligned.patch
+add v6.11-fd.patch
+
+[6.10.1023]
+add v6.10_bt8xx.patch
+
 [6.9.1023]
 add v6.9_i2c_mux.patch
 add v6.9_i2c_mux_tbs.patch
@@ -54,6 +61,7 @@ add v6.2_remove.patch
 add v6.2_probe.patch
 add v6.2_probe_tbs.patch
 add v6.2_v4l2-core.patch
+add v6.2_vm_flags_set.patch
 
 [6.1.1023]
 add v6.1_class.patch
