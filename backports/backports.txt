@@ -27,6 +27,8 @@ add debug.patch
 add drx39xxj.patch
 add ccs.patch
 add rc-cec.patch
+[6.14.1023]
+delete v6.12_import_ns.patch
 
 [6.12.1023]
 add v6.12_import_ns.patch
