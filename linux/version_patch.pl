@@ -9,7 +9,7 @@ sub patch_file($$$$)
 	my $after_line = shift;
 	my $media_build_version = shift;
 	my $patched;
-	my $warning = "WARNING: You are using an experimental version of the media stack.";
+	my $warning = "VERSION: blindscan drivers:";
 
 	open IN, "$filename" or die "can't open $filename";
 	my $is_function;
@@ -33,10 +33,7 @@ sub patch_file($$$$)
 			next;
 		};
 		if ($is_function && m/($after_line)/) {
-			$file .= "\tprintk(KERN_ERR \"$warning\\n" .
-				 "\\tAs the driver is backported to an older kernel, it doesn't offer\\n" .
-				 "\\tenough quality for its usage in production.\\n" .
-				 "\\tUse it with care.\\n$media_build_version\\n\");\n";
+			$file .= "$media_build_version";
 			$is_function = 0;
 			$patched++;
 			next;
@@ -64,37 +61,99 @@ sub patch_file($$$$)
 # Main
 #
 open IN, "git_log" or die "can't open git_log";
-my $logs;
-$logs.=$_ while (<IN>);
+
+open IN, "git_rev" or die "can't open git_rev";
+my $rev;
+$rev.=$_ while (<IN>);
 close IN;
 
 if (open IN,".linked_dir") {
 	while (<IN>) {
 		if (m/^path:\s*(.*)/) {
-			my $dir=$1;
-			my $new_log = qx(git --git-dir $dir/.git log --pretty=oneline -n3 |sed -r 's,([\x22]),,g; s,([\x25\x5c]),\\1\\1,g');
-			if ($new_log ne $logs) {
-				printf("Git version changed.\n");
-				open OUT, ">git_log";
-				print OUT $new_log;
+                    my $dir=$1;
+                    my $new_rev = qx(git --git-dir $dir/.git log --pretty=format:'%h' -n 1 );
+			if ($new_rev ne $rev) {
+				printf("Git rev changed.\n");
+				open OUT, ">git_rev";
+				print OUT $new_rev;
 				close OUT;
-				$logs = $new_log;
+				$rev = $new_rev;
 			}
+
 			last;
 		}
 	}
 	close IN;
 }
 
+$rev =~ s,\",\\\",g;
+$rev =~ s,\n,,g;
+$rev = "*rev=\"GIT-REV = \\\"$rev\\\";\";";
+
+open IN, "git_tag" or die "can't open git_tag";
+my $tag;
+$tag.=$_ while (<IN>);
+close IN;
+
+if (open IN,".linked_dir") {
+	while (<IN>) {
+		if (m/^path:\s*(.*)/) {
+                    my $dir=$1;
+                    my $new_tag = qx(git --git-dir $dir/.git describe --exact-match --tags );
+			if ($new_tag ne $tag) {
+				printf("Git tag changed.\n");
+				open OUT, ">git_tag";
+				print OUT $new_tag;
+				close OUT;
+				$tag = $new_tag;
+			}
+
+			last;
+		}
+	}
+	close IN;
+}
+
+
+$tag =~ s,\",\\\",g;
+$tag =~ s,\n,,g;
+$tag = "*tag=\"GIT-TAG = \\\"$tag\\\";\";";
+
+open IN, "git_branch" or die "can't open git_branch";
+my $branch;
+$branch.=$_ while (<IN>);
+close IN;
+
+if (open IN,".linked_dir") {
+	while (<IN>) {
+		if (m/^path:\s*(.*)/) {
+			my $dir=$1;
+                        my $new_branch = qx(git --git-dir $dir/.git rev-parse --abbrev-ref HEAD );
+			if ($new_branch ne $branch) {
+				printf("Git branch changed.\n");
+				open OUT, ">git_branch";
+				print OUT $new_branch;
+				close OUT;
+				$branch = $new_branch;
+			}
+                        last;
+                }
+        }
+	close IN;
+}
+
+
+$branch =~ s,\",\\\",g;
+$branch =~ s,\n,,g;
+$branch = "*branch=\"GIT-BRANCH = \\\"$branch\\\";\";";
+
 # Prepare patches message
-$logs =~ s/\s+$//;
-$logs =~ s,\n,\\n\\t,g;
-$logs =~ s,\",\\\",g;
-$logs = "Latest git patches (needed if you report a bug to linux-media\@vger.kernel.org):\\n\\t$logs";
+my $vstrings= "\t$rev\n\t$tag\n\t$branch\n";
 
 # Patch dvbdev
-patch_file "drivers/media/dvb-core/dvbdev.c", "__init init_dvbdev", "MKDEV", $logs;
+patch_file "drivers/media/dvb-core/dvbdev.c", "dvb_git_versions", "neumo_version_string", $vstrings;
+
 # Patch v4l2-dev
-patch_file "drivers/media/v4l2-core/v4l2-dev.c", "__init videodev_init", "pr_info", $logs;
+patch_file "drivers/media/v4l2-core/v4l2-dev.c", "dvb_git_versions", "neumo_version_string", $vstrings;
 # Patch rc core
-patch_file "drivers/media/rc/rc-main.c", "__init rc_core_init", "rc_map_register", $logs;
+patch_file "drivers/media/rc/rc-main.c", "dvb_git_versions", "neumo_version_string", $vstrings;
