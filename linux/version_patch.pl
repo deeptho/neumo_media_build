@@ -60,9 +60,7 @@ sub patch_file($$$$)
 #
 # Main
 #
-open IN, "git_log" or die "can't open git_log";
 
-open IN, "git_rev" or die "can't open git_rev";
 my $rev;
 $rev.=$_ while (<IN>);
 close IN;
@@ -86,6 +84,7 @@ if (open IN,".linked_dir") {
 	close IN;
 }
 
+open IN, "git_rev" or die "can't open git_rev";
 $rev =~ s,\",\\\",g;
 $rev =~ s,\n,,g;
 $rev = "*rev=\"GIT-REV = \\\"$rev\\\";\";";
