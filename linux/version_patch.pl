@@ -60,10 +60,15 @@ sub patch_file($$$$)
 #
 # Main
 #
+open IN, "git_log" or die "can't open git_log";
 
 my $rev;
-$rev.=$_ while (<IN>);
-close IN;
+if (-f "git_rev") {
+    # File exists and was opened successfully
+    open IN, "git_rev" or die "can't open git_rev";
+    $rev.=$_ while (<IN>);
+    close IN;
+}
 
 if (open IN,".linked_dir") {
 	while (<IN>) {
@@ -84,15 +89,18 @@ if (open IN,".linked_dir") {
 	close IN;
 }
 
-open IN, "git_rev" or die "can't open git_rev";
 $rev =~ s,\",\\\",g;
 $rev =~ s,\n,,g;
 $rev = "*rev=\"GIT-REV = \\\"$rev\\\";\";";
 
-open IN, "git_tag" or die "can't open git_tag";
+
 my $tag;
-$tag.=$_ while (<IN>);
-close IN;
+if (-f "git_tag") {
+    # File exists and was opened successfully
+    open IN, "git_tag" or die "can't open git_tag";
+    $tag.=$_ while (<IN>);
+    close IN;
+}
 
 if (open IN,".linked_dir") {
 	while (<IN>) {
@@ -118,10 +126,13 @@ $tag =~ s,\",\\\",g;
 $tag =~ s,\n,,g;
 $tag = "*tag=\"GIT-TAG = \\\"$tag\\\";\";";
 
-open IN, "git_branch" or die "can't open git_branch";
 my $branch;
-$branch.=$_ while (<IN>);
-close IN;
+if (-f "git_branch") {
+    # File exists and was opened successfully
+    open IN, "git_branch" or die "can't open git_branch";
+    $branch.=$_ while (<IN>);
+    close IN;
+}
 
 if (open IN,".linked_dir") {
 	while (<IN>) {
