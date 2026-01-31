@@ -1,3 +1,11 @@
+#DEPRECATED !!!!!!
+
+These drivers will only work with neumoDVB version neuodvn-2.2 or earlier.
+and for kernel 6.14 or some versions below 6.14.
+
+For newer kernels, and for newer neumodVB use the `neuo-drivers` repo instead at
+https://github.com/deeptho/neumo-drivers
+
 # What is this?
 This repository is a clone of tbs/media_build to support building the neumoDVB drivers.
 The neumoDVB drivers in question can be found in the linux_media tree available on this site.
