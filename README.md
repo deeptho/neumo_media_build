@@ -1,9 +1,9 @@
 #DEPRECATED !!!!!!
 
-These drivers will only work with neumoDVB version neuodvn-2.2 or earlier.
+These drivers will only work with neumoDVB version neumodvb-2.2 or earlier.
 and for kernel 6.14 or some versions below 6.14.
 
-For newer kernels, and for newer neumodVB use the `neuo-drivers` repo instead at
+For newer kernels, and for newer neumodVB use the `neumo-drivers` repo instead at
 https://github.com/deeptho/neumo-drivers
 
 # What is this?
